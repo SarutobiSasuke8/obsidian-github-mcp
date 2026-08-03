@@ -1,0 +1,22 @@
+services:
+  obsidian-github-mcp:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:3210:3210"
+    volumes:
+      - ./config/tokens.yaml:/app/config/tokens.yaml:ro
+      - ./config/policy.yaml:/app/config/policy.yaml:ro
+      - ./var:/app/var
+    environment:
+      VAULT_MCP_HOST: 0.0.0.0
+      VAULT_MCP_ALLOWED_HOSTS: localhost,127.0.0.1
+      VAULT_MCP_POLICY_FILE: /app/config/policy.yaml
+      VAULT_MCP_TOKEN_FILE: /app/config/tokens.yaml
+      VAULT_MCP_AUDIT_LOG: /app/var/audit.jsonl
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true

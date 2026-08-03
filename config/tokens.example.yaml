@@ -1,0 +1,9 @@
+version: 1
+agents:
+  # Generate a token with: npm run token:new
+  # Give the raw token only to this identity. Store only its SHA-256 here.
+  - agent_id: example-writer
+    broker: example-writer
+    enabled: false
+    token_sha256: 0000000000000000000000000000000000000000000000000000000000000000
+    expires_at: 2027-01-01T00:00:00Z

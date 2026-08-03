@@ -1,0 +1,9 @@
+node_modules
+dist
+.git
+.env
+config/tokens.yaml
+config/policy.yaml
+var
+*.pem
+*.key

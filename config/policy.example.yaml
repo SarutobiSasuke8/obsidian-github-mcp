@@ -1,0 +1,40 @@
+policy_version: 1
+authority: operator-only
+
+agents:
+  - id: example-writer
+    name: Example Writer
+    role: Writes proposals to a bounded workspace
+    disclosure_ceiling: internal
+    entry_reads:
+      - README.md
+    read:
+      - Knowledge/**
+      - Workspace/Shared/**
+      - Workspace/Example Writer/**
+    write:
+      - Workspace/Shared/**
+      - Workspace/Example Writer/**
+    deny:
+      - Private/**
+      - People/**
+      - .obsidian/**
+
+git_brokers:
+  - broker: example-writer
+    branch: agent/example-writer
+    allow:
+      - Workspace/Shared/**
+      - Workspace/Example Writer/**
+
+never_versioned:
+  - Private/**
+  - People/**
+  - .obsidian/**
+  - secrets/**
+
+# Optional frontmatter contracts for sensitive shared surfaces.
+surface_rules:
+  - path: Workspace/Shared/**
+    required_frontmatter:
+      disclosure: public-safe

@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+config/tokens.yaml
+config/policy.yaml
+var/
+*.log
+*.pem
+*.key
+.DS_Store
+Thumbs.db
