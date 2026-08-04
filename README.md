@@ -52,6 +52,7 @@ The service has no tools for deleting files, merging branches, pushing to `main`
 |---|---|
 | `vault_whoami` | Show the authenticated identity, broker, branch, and policy scopes. |
 | `vault_list_allowed_paths` | Explain effective read/write/deny boundaries. |
+| `vault_explain_access` | Dry run a single path. Report whether read, list, or write would be permitted and which policy rule decides it. No GitHub call. |
 | `vault_list_files` | List an authorized directory while filtering denied children. |
 | `vault_read_file` | Read an authorized UTF-8 vault file. |
 | `vault_create_file` | Create a file on the identity's fixed proposal branch. |

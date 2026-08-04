@@ -33,7 +33,7 @@ export function normalizeRepoPath(input: string): string {
   return normalized;
 }
 
-function patternMatches(repoPath: string, pattern: string): boolean {
+export function patternMatches(repoPath: string, pattern: string): boolean {
   const cleanPattern = pattern.trim().replaceAll("\\", "/");
   if (!cleanPattern) return false;
   if (cleanPattern.endsWith("/**") && repoPath === cleanPattern.slice(0, -3)) return true;
@@ -44,11 +44,28 @@ function matchesAny(repoPath: string, patterns: string[]): boolean {
   return patterns.some((pattern) => patternMatches(repoPath, pattern));
 }
 
-function globalDenyPatterns(policy: FleetPolicy): string[] {
-  const manifestPaths = policy.neverVersioned.filter(
+/**
+ * The first pattern in `patterns` that matches `repoPath`, or null. Callers use
+ * this instead of `matchesAny` when they need to report *which* rule decided an
+ * outcome rather than only whether one did.
+ */
+export function firstMatch(repoPath: string, patterns: string[]): string | null {
+  return patterns.find((pattern) => patternMatches(repoPath, pattern)) ?? null;
+}
+
+/** The deny patterns enforced for every identity, regardless of grants. */
+export function hardDenyPatterns(): readonly string[] {
+  return HARD_DENY;
+}
+
+export function neverVersionedPatterns(policy: FleetPolicy): string[] {
+  return policy.neverVersioned.filter(
     (entry) => entry.includes("/") || entry.includes("*") || entry.startsWith("."),
   );
-  return [...HARD_DENY, ...manifestPaths];
+}
+
+function globalDenyPatterns(policy: FleetPolicy): string[] {
+  return [...HARD_DENY, ...neverVersionedPatterns(policy)];
 }
 
 export function isDenied(policy: FleetPolicy, identity: AgentIdentity, repoPath: string): boolean {

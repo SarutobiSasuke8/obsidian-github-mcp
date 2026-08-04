@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/server";
 import { z } from "zod";
 
 import { appendContent, validateContent, validateReplacement } from "./content-policy.js";
+import { explainAccess } from "./explain.js";
 import {
   assertListable,
   assertReadable,
@@ -145,6 +146,33 @@ export function createVaultMcpServer(services: Services): McpServer {
           proposal_branch: identity.broker.branch,
         }),
       ),
+  );
+
+  server.registerTool(
+    "vault_explain_access",
+    {
+      title: "Explain a vault access decision",
+      description:
+        "Dry run. Report whether this identity could read, list, or write a path, " +
+        "and which policy rule decides it. Performs no read, no write, and no " +
+        "GitHub call.",
+      inputSchema: z.object({
+        path: z.string().min(1),
+        operation: z.enum(["read", "list", "write"]).default("read"),
+      }),
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
+    },
+    async ({ path: requestedPath, operation }, context) => {
+      let repoPath: string;
+      try {
+        repoPath = normalizeRepoPath(requestedPath);
+      } catch (error) {
+        return errorResult(error);
+      }
+      return runTool(services, context, "explain_access", repoPath, async ({ policy, identity }) =>
+        jsonResult(explainAccess(policy, identity, repoPath, operation)),
+      );
+    },
   );
 
   server.registerTool(
