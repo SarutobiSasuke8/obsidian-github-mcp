@@ -68,6 +68,14 @@ The service has no tools for deleting files, merging branches, pushing to `main`
 
 ## Quick start
 
+Install the public package:
+
+```bash
+npm install -g @sarutobi-sasuke/obsidian-github-mcp
+```
+
+Or use a source checkout:
+
 ```bash
 git clone https://github.com/YOUR_ACCOUNT/obsidian-github-mcp.git
 cd obsidian-github-mcp

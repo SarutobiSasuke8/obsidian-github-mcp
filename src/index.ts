@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { createMcpExpressApp, requireBearerAuth } from "@modelcontextprotocol/express";
 import { NodeStreamableHTTPServerTransport } from "@modelcontextprotocol/node";
 import { rateLimit } from "express-rate-limit";
