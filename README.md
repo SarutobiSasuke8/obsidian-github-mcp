@@ -68,13 +68,7 @@ The service has no tools for deleting files, merging branches, pushing to `main`
 
 ## Quick start
 
-Install the public package:
-
-```bash
-npm install -g @sarutobi-sasuke/obsidian-github-mcp
-```
-
-Or use a source checkout:
+Install from source (the current supported path):
 
 ```bash
 git clone https://github.com/YOUR_ACCOUNT/obsidian-github-mcp.git
@@ -89,6 +83,13 @@ npm start
 ```
 
 Configure `.env`, replace the sample policy, and put only the generated token's SHA-256 in `config/tokens.yaml`. Give the raw bearer token to exactly one MCP client.
+
+Once v0.1.0 is published to npm, a global install will also be available:
+
+```bash
+# Available once v0.1.0 is published — not yet on the npm registry.
+npm install -g @sarutobi-sasuke/obsidian-github-mcp
+```
 
 The default endpoints are:
 

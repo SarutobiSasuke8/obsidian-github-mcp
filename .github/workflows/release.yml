@@ -1,0 +1,47 @@
+name: Publish npm package
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    if: startsWith(github.event.release.tag_name, 'v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # npm's provenance/trusted-publishing OIDC handshake requires npm CLI 11.5.1+.
+          # Node 22 ships npm v10, which silently degrades the handshake and makes the
+          # registry treat the publish as anonymous — surfacing as a misleading 404
+          # ("package is not in this registry") instead of an auth error. Node 24 ships
+          # a compatible npm CLI. package.json's own engines field (>=22) is the minimum
+          # for people running the server; this only affects the publish toolchain.
+          node-version: 24
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm run check
+      - run: npm audit --omit=dev --audit-level=high
+      - run: npm pack --dry-run
+      # Verify the release tag matches the version actually being published.
+      - name: Verify tag matches package version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG="$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "$PKG" ]; then
+            echo "Release tag $GITHUB_REF_NAME does not match package.json version $PKG"
+            exit 1
+          fi
+          echo "Tag $GITHUB_REF_NAME matches package.json version $PKG"
+      # Trusted publishing (OIDC), configured on npmjs.com under the package's Settings ->
+      # Trusted Publisher: GitHub Actions, repo SarutobiSasuke8/obsidian-github-mcp,
+      # workflow release.yml, environment left blank. No token: npm exchanges the id-token
+      # this workflow already requests (see permissions above) for a short-lived publish
+      # grant. Provenance attestation is automatic once trusted publishing is active.
+      - run: npm publish --access public
