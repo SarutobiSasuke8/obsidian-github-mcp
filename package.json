@@ -54,19 +54,19 @@
     "@modelcontextprotocol/node": "2.0.0",
     "@modelcontextprotocol/server": "2.0.0",
     "express": "5.2.1",
-    "express-rate-limit": "8.6.1",
+    "express-rate-limit": "8.7.0",
     "helmet": "8.3.0",
     "minimatch": "10.2.6",
     "yaml": "2.9.0",
-    "zod": "4.4.3"
+    "zod": "4.5.4"
   },
   "devDependencies": {
     "@types/express": "5.0.6",
     "@types/node": "22.19.15",
-    "eslint": "10.8.0",
-    "tsx": "4.20.6",
+    "eslint": "10.9.1",
+    "tsx": "4.23.13",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.66.0"
+    "typescript-eslint": "8.69.0"
   },
   "overrides": {
     "@hono/node-server": "2.0.12"
