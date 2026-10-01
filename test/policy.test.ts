@@ -49,3 +49,14 @@ test("normalizes safe paths and rejects traversal or Windows paths", () => {
 test("main is forbidden as a broker branch", () => {
   assert.throws(() => parseFleetPolicy(policyFixture.replace("branch: agent/alpha", "branch: main")));
 });
+
+test("misspelt restriction fields and unknown versions fail closed", () => {
+  for (const policy of [
+    policyFixture.replace("deny:", "denny:"),
+    policyFixture.replace("never_versioned:", "never_versiond:"),
+    policyFixture.replace("required_frontmatter:", "required_frontmater:"),
+    policyFixture.replace("policy_version: 1", "policy_version: 2"),
+    policyFixture.replace("authority: operator-only", "authority: agent-controlled"),
+    policyFixture.replace("branch: agent/alpha", "branch: agent/alpha\n    deny: [Private/**]"),
+  ]) assert.throws(() => parseFleetPolicy(policy));
+});

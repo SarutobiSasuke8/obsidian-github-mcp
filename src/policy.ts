@@ -12,7 +12,7 @@ import type {
 } from "./types.js";
 
 const stringArray = z.array(z.string()).default([]);
-const rawAgentSchema = z.object({
+const rawAgentSchema = z.strictObject({
   id: z.string().min(1),
   name: z.string().default(""),
   role: z.string().default(""),
@@ -22,18 +22,18 @@ const rawAgentSchema = z.object({
   write: stringArray,
   deny: stringArray,
 });
-const rawBrokerSchema = z.object({
+const rawBrokerSchema = z.strictObject({
   broker: z.string().min(1),
   branch: z.string().min(1),
   allow: z.array(z.string()).min(1),
 });
-const rawSurfaceRuleSchema = z.object({
+const rawSurfaceRuleSchema = z.strictObject({
   path: z.string().min(1),
   required_frontmatter: z.record(z.string(), z.string()).default({}),
 });
-const rawPolicySchema = z.object({
-  policy_version: z.number().int().positive(),
-  authority: z.string().default("operator-only"),
+const rawPolicySchema = z.strictObject({
+  policy_version: z.literal(1),
+  authority: z.literal("operator-only").default("operator-only"),
   agents: z.array(rawAgentSchema),
   git_brokers: z.array(rawBrokerSchema),
   never_versioned: z.array(z.string()).default([]),
