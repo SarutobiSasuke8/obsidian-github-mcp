@@ -31,3 +31,15 @@ agents:
 `),
   );
 });
+
+test("a misspelt disabling field cannot silently enable a token", () => {
+  assert.throws(() => parseAuthBindings(`
+version: 1
+agents:
+  - agent_id: alpha-writer
+    broker: alpha
+    enabld: false
+    token_sha256: ${sha256("test-only")}
+    expires_at: 2099-01-01T00:00:00Z
+`), /Unrecognized key/u);
+});

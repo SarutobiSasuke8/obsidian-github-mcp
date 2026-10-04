@@ -8,14 +8,14 @@ import { z } from "zod";
 import type { AuthInfo, OAuthTokenVerifier } from "@modelcontextprotocol/server";
 import type { AuthBinding } from "./types.js";
 
-const bindingSchema = z.object({
+const bindingSchema = z.strictObject({
   agent_id: z.string().min(1),
   broker: z.string().min(1),
   enabled: z.boolean().default(true),
   token_sha256: z.string().regex(/^[a-f0-9]{64}$/u),
   expires_at: z.string().datetime({ offset: true }),
 });
-const tokenFileSchema = z.object({ version: z.literal(1), agents: z.array(bindingSchema) });
+const tokenFileSchema = z.strictObject({ version: z.literal(1), agents: z.array(bindingSchema) });
 
 export function sha256(value: string): string {
   return createHash("sha256").update(value, "utf8").digest("hex");

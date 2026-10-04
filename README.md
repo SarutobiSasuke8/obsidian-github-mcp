@@ -166,6 +166,10 @@ npm audit --audit-level=high
 
 Tests cover policy parsing, write-scope intersection, deny precedence, traversal attempts, frontmatter rules, mutability, secret detection, token bindings, and fixed-branch GitHub writes.
 
+Run `npm run test:e2e` for a clean tarball installation and real MCP HTTP client proof against a test-only GitHub substitute. It exercises proposal writes, denied paths/content, immutable and append-only notes, stale-write conflicts, invalid policy reloads, live token revocation and content-free audit records. CI runs this proof on Windows/Linux with Node 22/24, and the release workflow requires it.
+
+Policy and token files reject unknown keys. Only `policy_version: 1` and `authority: operator-only` are supported. Correct misspelt fields or remove unsupported metadata before upgrading; silently ignored restrictions are no longer accepted. [Release evidence and remaining gates](docs/RELEASE_EVIDENCE_2026-10-01.md).
+
 ## Security
 
 Read [SECURITY.md](SECURITY.md) before deployment. Report suspected vulnerabilities privately rather than opening a public issue with exploit details.
