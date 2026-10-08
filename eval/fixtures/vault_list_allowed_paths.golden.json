@@ -1,0 +1,24 @@
+{
+  "deny": [
+    "Private/**",
+    "People/**",
+    ".obsidian/**"
+  ],
+  "proposal_branch": "agent/example-writer",
+  "read": [
+    "README.md",
+    "Knowledge/**",
+    "Workspace/Shared/**",
+    "Workspace/Example Writer/**"
+  ],
+  "write_requires_both": {
+    "agent_write": [
+      "Workspace/Shared/**",
+      "Workspace/Example Writer/**"
+    ],
+    "broker_allow": [
+      "Workspace/Shared/**",
+      "Workspace/Example Writer/**"
+    ]
+  }
+}

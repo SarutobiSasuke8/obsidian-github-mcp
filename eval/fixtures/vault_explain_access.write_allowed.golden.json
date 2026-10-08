@@ -1,0 +1,23 @@
+{
+  "agentId": "example-writer",
+  "allowed": true,
+  "branch": "agent/example-writer",
+  "broker": "example-writer",
+  "decidingRule": {
+    "pattern": "Workspace/Example Writer/**",
+    "source": "agent-write"
+  },
+  "matchedRules": [
+    {
+      "pattern": "Workspace/Example Writer/**",
+      "source": "agent-write"
+    },
+    {
+      "pattern": "Workspace/Example Writer/**",
+      "source": "broker-allow"
+    }
+  ],
+  "operation": "write",
+  "path": "Workspace/Example Writer/Note.md",
+  "reason": "Allowed. The agent grant 'Workspace/Example Writer/**' and the broker grant 'Workspace/Example Writer/**' both cover this path, and no deny rule matches. The write would land on branch 'agent/example-writer'."
+}

@@ -1,0 +1,38 @@
+name: mcp-eval
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      # The server is Streamable HTTP only. Start it offline (synthetic config, fake token,
+      # GitHub stub preloaded) in the background and wait until it is healthy.
+      - name: Start the server for the contract suite
+        run: |
+          node eval/contract.mjs --serve > mcp-eval-server.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl -sf http://127.0.0.1:3297/healthz > /dev/null; then exit 0; fi
+            sleep 0.5
+          done
+          cat mcp-eval-server.log
+          exit 1
+      # Harness pinned to the v1 PR head (mcp-eval-harness #6). Repin to the merged main SHA,
+      # here and in package.json, after mcp-eval-harness PRs #5 and #6 merge.
+      - uses: SarutobiSasuke8/mcp-eval-harness@077c74a60ccd6d9061e35f882ffd3db5f5d17052
+        with:
+          suite: eval/mcp.suite.yaml
+          node-version: ""

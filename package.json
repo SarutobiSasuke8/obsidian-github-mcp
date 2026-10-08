@@ -48,6 +48,7 @@
     "test": "npm run build && node --test \"dist/test/*.test.js\"",
     "check": "npm run typecheck && npm run lint && npm test",
     "test:e2e": "npm run build && node --test test/e2e/pack.test.mjs",
+    "eval:contract": "npm run build && node eval/contract.mjs",
     "prepare": "npm run build"
   },
   "dependencies": {
@@ -63,6 +64,7 @@
   },
   "devDependencies": {
     "@modelcontextprotocol/client": "2.2.0",
+    "@sarutobi-sasuke/mcp-eval-harness": "github:SarutobiSasuke8/mcp-eval-harness#077c74a60ccd6d9061e35f882ffd3db5f5d17052",
     "@types/express": "5.0.6",
     "@types/node": "22.19.15",
     "eslint": "10.11.0",
