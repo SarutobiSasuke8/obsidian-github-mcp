@@ -1,0 +1,19 @@
+{
+  "agentId": "example-writer",
+  "allowed": false,
+  "branch": "agent/example-writer",
+  "broker": "example-writer",
+  "decidingRule": {
+    "pattern": "Private/**",
+    "source": "never-versioned"
+  },
+  "matchedRules": [
+    {
+      "pattern": "Private/**",
+      "source": "never-versioned"
+    }
+  ],
+  "operation": "read",
+  "path": "Private/Diary.md",
+  "reason": "Denied by the never-versioned rule 'Private/**'. Deny always beats a grant."
+}

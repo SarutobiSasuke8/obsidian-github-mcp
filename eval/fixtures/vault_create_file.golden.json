@@ -1,0 +1,7 @@
+{
+  "branch": "agent/example-writer",
+  "commitSha": "eval-commit-sha",
+  "contentSha": "eval-content-sha",
+  "path": "Workspace/Example Writer/Eval Proposal.md",
+  "review_required": false
+}
