@@ -15,6 +15,7 @@ import {
 import { PolicyStore } from "./policy.js";
 import { createVaultMcpServer } from "./server.js";
 
+import type { McpServer } from "@modelcontextprotocol/server";
 import type { ErrorRequestHandler } from "express";
 
 const config = loadConfig();
@@ -35,12 +36,11 @@ const github = new GitHubRepositoryClient(
   tokenProvider,
 );
 const audit = new AuditLogger(config.auditLog);
-const mcpServer = createVaultMcpServer({ config, policyStore, github, audit });
-const transport = new NodeStreamableHTTPServerTransport({
-  sessionIdGenerator: undefined,
-  enableJsonResponse: true,
-});
-await mcpServer.connect(transport);
+const services = { config, policyStore, github, audit };
+// Stateless Streamable HTTP: the SDK does not reuse a stateless transport across
+// requests, so each request gets its own server and transport, closed when the
+// response closes. The services above are shared.
+const openServers = new Set<McpServer>();
 
 const app = createMcpExpressApp({
   host: config.host,
@@ -77,6 +77,17 @@ app.all(
   mcpRateLimit,
   requireBearerAuth({ verifier, requiredScopes: ["vault"] }),
   async (request, response) => {
+    const mcpServer = createVaultMcpServer(services);
+    const transport = new NodeStreamableHTTPServerTransport({
+      sessionIdGenerator: undefined,
+      enableJsonResponse: true,
+    });
+    openServers.add(mcpServer);
+    response.on("close", () => {
+      openServers.delete(mcpServer);
+      void mcpServer.close();
+    });
+    await mcpServer.connect(transport);
     await transport.handleRequest(request, response, request.body);
   },
 );
@@ -102,7 +113,8 @@ httpServer.maxRequestsPerSocket = 1_000;
 
 async function shutdown(): Promise<void> {
   httpServer.close();
-  await mcpServer.close();
+  await Promise.allSettled([...openServers].map((server) => server.close()));
+  openServers.clear();
 }
 
 process.on("SIGINT", () => void shutdown());
