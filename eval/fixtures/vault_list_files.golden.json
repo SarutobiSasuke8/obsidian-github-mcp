@@ -1,0 +1,18 @@
+{
+  "result": [
+    {
+      "name": "Guides",
+      "path": "Knowledge/Guides",
+      "sha": "dir-Guides",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "name": "Welcome.md",
+      "path": "Knowledge/Welcome.md",
+      "sha": "sha-welcome",
+      "size": 66,
+      "type": "file"
+    }
+  ]
+}

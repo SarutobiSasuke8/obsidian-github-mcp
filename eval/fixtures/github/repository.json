@@ -1,0 +1,13 @@
+{
+  "owner": "example",
+  "repo": "vault",
+  "branch": "agent/example-writer",
+  "files": {
+    "README.md": { "sha": "sha-readme", "content": "# Example vault\n\nSynthetic fixture for the mcp-eval contract suite.\n" },
+    "Knowledge/Welcome.md": { "sha": "sha-welcome", "content": "---\nmutability: living\n---\n# Welcome\n\nA synthetic knowledge note.\n" },
+    "Knowledge/Guides/Filing.md": { "sha": "sha-filing", "content": "# Filing\n\nA synthetic guide.\n" },
+    "Private/Diary.md": { "sha": "sha-diary", "content": "Synthetic private note. The policy must never serve it.\n" },
+    "Workspace/Example Writer/Draft.md": { "sha": "sha-draft", "content": "# Draft\n\nA living proposal.\n" },
+    "Workspace/Example Writer/Record.md": { "sha": "sha-record", "content": "---\nmutability: immutable\n---\nOriginal immutable record.\n" }
+  }
+}

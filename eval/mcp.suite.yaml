@@ -1,0 +1,154 @@
+# mcp-eval contract suite for obsidian-github-mcp.
+#
+# The server is Streamable HTTP only, so the suite targets a running instance. Run it with
+# `npm run eval:contract`, which builds, starts dist/src/index.js through eval/contract.mjs,
+# runs this suite and stops the server. In CI, eval/contract.mjs --serve starts it in the
+# background before the composite action runs.
+#
+# Offline and secret-free:
+# - The server runs with the synthetic policy and token files in fixtures/config and a fake
+#   GITHUB_TOKEN. The bearer value below is synthetic and matches only fixtures/config/tokens.yaml.
+# - eval/github-stub.mjs replaces fetch inside the server process. It answers GitHub contents
+#   API calls from fixtures/github/repository.json and blocks every other outbound request, so
+#   the suite never reaches the real GitHub API. Writes change nothing.
+version: 1
+name: obsidian-github-mcp
+timeout_ms: 20000
+target:
+  transport: http
+  url: http://127.0.0.1:3297/mcp
+  headers:
+    Authorization: "Bearer eval-synthetic-token-not-a-secret"
+contracts:
+  # exact: true fails if a tool is added or removed without updating this contract.
+  - name: tools_listed
+    expect_tools:
+      - vault_whoami
+      - vault_list_allowed_paths
+      - vault_explain_access
+      - vault_list_files
+      - vault_read_file
+      - vault_create_file
+      - vault_update_file
+      - vault_append_file
+    exact: true
+
+  - name: input_schemas
+    input_schema:
+      vault_whoami: fixtures/vault_whoami.input.schema.json
+      vault_list_allowed_paths: fixtures/vault_list_allowed_paths.input.schema.json
+      vault_explain_access: fixtures/vault_explain_access.input.schema.json
+      vault_list_files: fixtures/vault_list_files.input.schema.json
+      vault_read_file: fixtures/vault_read_file.input.schema.json
+      vault_create_file: fixtures/vault_create_file.input.schema.json
+      vault_update_file: fixtures/vault_update_file.input.schema.json
+      vault_append_file: fixtures/vault_append_file.input.schema.json
+
+  # Golden happy paths. whoami, list_allowed_paths and explain_access make no GitHub call.
+  - name: whoami_golden
+    tool: vault_whoami
+    input: {}
+    assert:
+      golden: fixtures/vault_whoami.golden.json
+
+  - name: list_allowed_paths_golden
+    tool: vault_list_allowed_paths
+    input: {}
+    assert:
+      golden: fixtures/vault_list_allowed_paths.golden.json
+
+  - name: explain_write_allowed_golden
+    tool: vault_explain_access
+    input: { path: "Workspace/Example Writer/Note.md", operation: write }
+    assert:
+      golden: fixtures/vault_explain_access.write_allowed.golden.json
+
+  - name: explain_private_denied_golden
+    tool: vault_explain_access
+    input: { path: "Private/Diary.md", operation: read }
+    assert:
+      golden: fixtures/vault_explain_access.private_denied.golden.json
+
+  # These go through the offline GitHub stub.
+  - name: read_file_golden
+    tool: vault_read_file
+    input: { path: "Knowledge/Welcome.md" }
+    assert:
+      golden: fixtures/vault_read_file.golden.json
+
+  - name: list_files_golden
+    tool: vault_list_files
+    input: { path: "Knowledge" }
+    assert:
+      golden: fixtures/vault_list_files.golden.json
+
+  - name: create_file_golden
+    tool: vault_create_file
+    input:
+      path: "Workspace/Example Writer/Eval Proposal.md"
+      content: "# Eval proposal\n\nSynthetic content written by the contract suite.\n"
+    assert:
+      golden: fixtures/vault_create_file.golden.json
+
+  # Deny and fail-closed paths. Each is refused before any GitHub write.
+  - name: deny_read_private_path
+    tool: vault_read_file
+    input: { path: "Private/Diary.md" }
+    assert:
+      is_error: true
+      error_message: "may not read"
+
+  - name: deny_path_traversal
+    tool: vault_read_file
+    input: { path: "Knowledge/../Private/Diary.md" }
+    assert:
+      is_error: true
+      error_message: "dot path segments are forbidden"
+
+  - name: deny_write_outside_scope
+    tool: vault_create_file
+    input: { path: "Knowledge/Injected.md", content: "Synthetic content." }
+    assert:
+      is_error: true
+      error_message: "may not write"
+
+  - name: deny_write_hard_denied_path
+    tool: vault_create_file
+    input: { path: ".github/workflows/injected.yml", content: "name: injected" }
+    assert:
+      is_error: true
+      error_message: "may not write"
+
+  - name: deny_secret_like_content
+    tool: vault_create_file
+    input:
+      path: "Workspace/Example Writer/Leak.md"
+      content: "password = synthetic-not-a-real-secret-value"
+    assert:
+      is_error: true
+      error_message: "resembles a credential assignment"
+
+  - name: deny_rewrite_immutable_note
+    tool: vault_update_file
+    input:
+      path: "Workspace/Example Writer/Record.md"
+      content: "---\nmutability: immutable\n---\nRewritten.\n"
+    assert:
+      is_error: true
+      error_message: "Immutable files cannot be updated"
+
+  - name: deny_commit_message_over_limit
+    tool: vault_append_file
+    input:
+      path: "Workspace/Example Writer/Draft.md"
+      content: "More text."
+      commit_message: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    assert:
+      is_error: true
+      error_message: "commit_message"
+
+  - name: unknown_tool_is_invalid_params
+    tool: vault_delete_file
+    input: { path: "Workspace/Example Writer/Draft.md" }
+    assert:
+      error_code: INVALID_PARAMS

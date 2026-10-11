@@ -1,0 +1,28 @@
+{
+  "agent_id": "example-writer",
+  "agent_write": [
+    "Workspace/Shared/**",
+    "Workspace/Example Writer/**"
+  ],
+  "broker": "example-writer",
+  "broker_allow": [
+    "Workspace/Shared/**",
+    "Workspace/Example Writer/**"
+  ],
+  "deny": [
+    "Private/**",
+    "People/**",
+    ".obsidian/**"
+  ],
+  "disclosure_ceiling": "internal",
+  "fleet_manifest_version": 1,
+  "name": "Example Writer",
+  "proposal_branch": "agent/example-writer",
+  "read": [
+    "README.md",
+    "Knowledge/**",
+    "Workspace/Shared/**",
+    "Workspace/Example Writer/**"
+  ],
+  "role": "Writes proposals to a bounded workspace"
+}

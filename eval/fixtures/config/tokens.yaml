@@ -1,0 +1,10 @@
+# Synthetic token binding for the mcp-eval contract suite. The raw value is
+# eval-synthetic-token-not-a-secret, which only exists in eval/mcp.suite.yaml.
+# It grants nothing outside this offline suite.
+version: 1
+agents:
+  - agent_id: example-writer
+    broker: example-writer
+    enabled: true
+    token_sha256: a5849b0c7c189a5db36e91005bb5108d25c5dd1b4b32275bfc823219440cc574
+    expires_at: 2099-01-01T00:00:00Z
