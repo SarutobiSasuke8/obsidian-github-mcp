@@ -84,6 +84,21 @@ npm start
 
 Configure `.env`, replace the sample policy, and put only the generated token's SHA-256 in `config/tokens.yaml`. Give the raw bearer token to exactly one MCP client.
 
+To verify a checkout before configuring a running service:
+
+```bash
+npm ci
+npm run check
+npm run test:e2e
+```
+
+These checks use synthetic notes, mock GitHub responses and loopback transports.
+They need no GitHub or MCP credentials. Note regressions cover Unicode/path
+encoding, CRLF frontmatter, malformed metadata, UTF-8 size limits and append-only
+byte preservation. CI runs the same checks on Linux and Windows with Node.js 22
+and 24. The 8 tools listed above are the current server surface; tests do not
+publish proposals to a real vault.
+
 Once v0.1.0 is published to npm, a global install will also be available:
 
 ```bash
