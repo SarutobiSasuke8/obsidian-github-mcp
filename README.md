@@ -53,8 +53,8 @@ The service has no tools for deleting files, merging branches, pushing to `main`
 | `vault_whoami` | Show the authenticated identity, broker, branch, and policy scopes. |
 | `vault_list_allowed_paths` | Explain effective read/write/deny boundaries. |
 | `vault_explain_access` | Dry run a single path. Report whether read, list, or write would be permitted and which policy rule decides it. No GitHub call. |
-| `vault_list_files` | List an authorized directory while filtering denied children. |
-| `vault_read_file` | Read an authorized UTF-8 vault file. |
+| `vault_list_files` | List an authorised directory while filtering denied children. |
+| `vault_read_file` | Read an authorised UTF-8 vault file. |
 | `vault_create_file` | Create a file on the identity's fixed proposal branch. |
 | `vault_update_file` | Update a permitted file while respecting mutability. |
 | `vault_append_file` | Append while preserving all existing bytes. |
@@ -79,10 +79,11 @@ cp config/policy.example.yaml config/policy.yaml
 cp config/tokens.example.yaml config/tokens.yaml
 npm run token:new
 npm run check
+# Configure .env with your GitHub repository and token/app credentials before starting:
 npm start
 ```
 
-Configure `.env`, replace the sample policy, and put only the generated token's SHA-256 in `config/tokens.yaml`. Give the raw bearer token to exactly one MCP client.
+Configure `.env` (specifying your repository and either a `GITHUB_TOKEN` or GitHub App credentials), replace the sample policy, and put only the generated token's SHA-256 in `config/tokens.yaml`. Give the raw bearer token to exactly one MCP client.
 
 To verify a checkout before configuring a running service:
 
@@ -102,7 +103,7 @@ publish proposals to a real vault.
 Once v0.1.0 is published to npm, a global install will also be available:
 
 ```bash
-# Available once v0.1.0 is published — not yet on the npm registry.
+# Available once v0.1.0 is published (not yet on the npm registry).
 npm install -g @sarutobi-sasuke/obsidian-github-mcp
 ```
 
@@ -152,7 +153,7 @@ surface_rules:
 
 An auth binding then maps one token hash to that identity and broker. The binding cannot grant paths that the policy does not grant.
 
-See [docs/PERMISSIONS.md](docs/PERMISSIONS.md) for provisioning and revocation.
+See [Permissions documentation](docs/PERMISSIONS.md) for provisioning and revocation.
 
 ## GitHub authentication
 
@@ -170,7 +171,7 @@ The server creates short-lived installation tokens restricted again to the confi
 
 The included container runs as a non-root user with a read-only root filesystem. Put TLS, a private overlay network, or an authenticated gateway in front of the service before making it remotely reachable.
 
-See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+See [Deployment guide](docs/DEPLOYMENT.md).
 
 ## Verification
 
@@ -187,8 +188,8 @@ Policy and token files reject unknown keys. Only `policy_version: 1` and `author
 
 ## Security
 
-Read [SECURITY.md](SECURITY.md) before deployment. Report suspected vulnerabilities privately rather than opening a public issue with exploit details.
+Read [Security policy](SECURITY.md) before deployment. Report suspected vulnerabilities privately rather than opening a public issue with exploit details.
 
 ## License
 
-Apache-2.0. See [LICENSE](LICENSE).
+Apache-2.0. See [Apache-2.0 License](LICENSE).
