@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.sarutobisasuke8/obsidian-github-mcp",
+  "title": "Obsidian GitHub MCP",
+  "description": "A permissioned MCP gateway for agent proposals to a Git-backed Obsidian vault.",
+  "repository": {
+    "url": "https://github.com/SarutobiSasuke8/obsidian-github-mcp",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@sarutobi-sasuke/obsidian-github-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
