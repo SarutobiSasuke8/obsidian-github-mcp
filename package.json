@@ -1,5 +1,6 @@
 {
   "name": "@sarutobi-sasuke/obsidian-github-mcp",
+  "mcpName": "io.github.SarutobiSasuke8/obsidian-github-mcp",
   "version": "0.1.0",
   "author": "Alexei Udall",
   "homepage": "https://github.com/SarutobiSasuke8/obsidian-github-mcp#readme",
@@ -30,26 +31,31 @@
     "obsidian-github-mcp": "dist/src/index.js"
   },
   "files": [
-    "dist/src",
+    "dist/src/**/*.js",
+    "dist/src/**/*.d.ts",
     "config/policy.example.yaml",
     "config/tokens.example.yaml",
-    "docs",
+    "docs/DEPLOYMENT.md",
+    "docs/PERMISSIONS.md",
     "README.md",
     "SECURITY.md",
-    "LICENSE"
+    "LICENSE",
+    "docs/RELEASE_EVIDENCE_2026-10-01.md"
   ],
   "scripts": {
     "dev": "node --watch --env-file-if-exists=.env --import tsx src/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node --env-file-if-exists=.env dist/src/index.js",
     "token:new": "node scripts/generate-token.mjs",
+    "check:registry": "node scripts/check-registry-pack.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint .",
     "test": "npm run build && node --test \"dist/test/*.test.js\"",
     "check": "npm run typecheck && npm run lint && npm test",
     "test:e2e": "npm run build && node --test test/e2e/pack.test.mjs",
     "eval:contract": "npm run build && node eval/contract.mjs",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run check && npm run test:e2e && npm run check:registry"
   },
   "dependencies": {
     "@modelcontextprotocol/express": "2.0.2",
@@ -67,6 +73,8 @@
     "@sarutobi-sasuke/mcp-eval-harness": "github:SarutobiSasuke8/mcp-eval-harness#c33df1c081ec871a7fbc294af87052bfeabb6b24",
     "@types/express": "5.0.6",
     "@types/node": "26.6.5",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
     "eslint": "10.12.0",
     "tsx": "4.23.15",
     "typescript": "5.9.3",
