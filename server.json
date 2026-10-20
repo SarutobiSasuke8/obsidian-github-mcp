@@ -1,6 +1,6 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.sarutobisasuke8/obsidian-github-mcp",
+  "name": "io.github.SarutobiSasuke8/obsidian-github-mcp",
   "title": "Obsidian GitHub MCP",
   "description": "A permissioned MCP gateway for agent proposals to a Git-backed Obsidian vault.",
   "repository": {
@@ -14,8 +14,68 @@
       "identifier": "@sarutobi-sasuke/obsidian-github-mcp",
       "version": "0.1.0",
       "transport": {
-        "type": "stdio"
-      }
+        "type": "streamable-http",
+        "url": "http://127.0.0.1:{VAULT_MCP_PORT}/mcp",
+        "headers": [
+          {
+            "name": "Authorization",
+            "value": "Bearer {client_token}",
+            "variables": {
+              "client_token": {
+                "description": "Existing operator-provisioned MCP client token, not the GitHub token.",
+                "isRequired": true,
+                "isSecret": true
+              }
+            }
+          }
+        ]
+      },
+      "environmentVariables": [
+        {
+          "name": "VAULT_MCP_PORT",
+          "description": "Loopback HTTP listening port.",
+          "default": "3210"
+        },
+        {
+          "name": "VAULT_MCP_GITHUB_OWNER",
+          "description": "Owner of the operator-authorised vault repository.",
+          "isRequired": true
+        },
+        {
+          "name": "VAULT_MCP_GITHUB_REPO",
+          "description": "Operator-authorised vault repository name.",
+          "isRequired": true
+        },
+        {
+          "name": "VAULT_MCP_POLICY_FILE",
+          "description": "Absolute path to the operator-provisioned policy YAML.",
+          "isRequired": true
+        },
+        {
+          "name": "VAULT_MCP_TOKEN_FILE",
+          "description": "Absolute path to the operator-provisioned client-token YAML.",
+          "isRequired": true
+        },
+        {
+          "name": "GITHUB_TOKEN",
+          "description": "Required for the token-based quickstart. Alternatively configure all three GitHub App variables documented in README.",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "GITHUB_APP_ID",
+          "description": "GitHub App alternative: set all three App variables instead of GITHUB_TOKEN."
+        },
+        {
+          "name": "GITHUB_APP_INSTALLATION_ID",
+          "description": "GitHub App installation ID, required with GITHUB_APP_ID."
+        },
+        {
+          "name": "GITHUB_APP_PRIVATE_KEY_FILE",
+          "description": "Absolute path to the operator-provisioned App private key; required with GITHUB_APP_ID.",
+          "isSecret": true
+        }
+      ]
     }
   ]
 }

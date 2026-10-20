@@ -21,13 +21,21 @@ if (server.$schema !== schema.$id || server.name !== packageJson.mcpName ||
   throw new Error("Registry schema, name, version or npm package identity does not match package.json");
 }
 
+const npmEntry = server.packages.find((entry) => entry.registryType === "npm");
+if (npmEntry.transport.type !== "streamable-http" || npmEntry.transport.url !== "http://127.0.0.1:{VAULT_MCP_PORT}/mcp" ||
+    !["VAULT_MCP_GITHUB_OWNER", "VAULT_MCP_GITHUB_REPO", "VAULT_MCP_POLICY_FILE", "VAULT_MCP_TOKEN_FILE"].every((name) =>
+      npmEntry.environmentVariables?.some((entry) => entry.name === name && entry.isRequired)) ||
+    !npmEntry.environmentVariables?.some((entry) => entry.name === "GITHUB_TOKEN" && entry.isSecret)) {
+  throw new Error("Registry installation must describe the configured self-hosted HTTP server");
+}
+
 const npmCli = process.env.npm_execpath;
 const output = npmCli
   ? execFileSync(process.execPath, [npmCli, "pack", "--dry-run", "--json", "--ignore-scripts"], { encoding: "utf8" })
   : execFileSync(process.platform === "win32" ? "npm.cmd" : "npm",
       ["pack", "--dry-run", "--json", "--ignore-scripts"], { encoding: "utf8" });
 const files = JSON.parse(output)[0]?.files?.map((entry) => entry.path) ?? [];
-const required = ["README.md", "LICENSE"];
+const required = ["README.md", "LICENSE", "docs/RELEASE_EVIDENCE_2026-10-01.md"];
 const missing = required.filter((name) => !files.includes(name));
 if (!files.some((name) => /^dist\/.+\.js$/u.test(name))) missing.push("dist/*.js");
 const forbidden = files.filter((name) =>
