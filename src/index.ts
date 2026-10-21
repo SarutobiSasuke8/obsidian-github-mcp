@@ -50,14 +50,7 @@ const app = createMcpExpressApp({
 });
 app.disable("x-powered-by");
 if (config.trustProxyHops > 0) app.set("trust proxy", config.trustProxyHops);
-app.use(
-  helmet({
-    // TLS is expected at the deployment edge. Setting HSTS here would also affect local HTTP use.
-    strictTransportSecurity: false,
-    // This service returns JSON and SSE rather than executable HTML.
-    contentSecurityPolicy: false,
-  }),
-);
+app.use(helmet());
 
 const verifier = new TokenFileVerifier(config.tokenFile);
 const mcpRateLimit = rateLimit({

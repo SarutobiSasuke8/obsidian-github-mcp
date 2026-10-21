@@ -91,6 +91,12 @@ agents:
   });
   await waitForListening(child);
 
+  const health = await fetch(`http://127.0.0.1:${port}/healthz`);
+  assert.equal(health.status, 200);
+  assert.match(health.headers.get("content-security-policy") ?? "", /default-src 'self'/u);
+  assert.equal(health.headers.get("x-frame-options"), "SAMEORIGIN");
+  assert.ok(health.headers.has("strict-transport-security"));
+
   const url = `http://127.0.0.1:${port}/mcp`;
   const negotiated: { protocolVersion?: string } = {};
   let nextId = 1;
