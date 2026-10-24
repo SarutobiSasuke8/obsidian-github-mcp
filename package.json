@@ -83,6 +83,9 @@
   "overrides": {
     "@hono/node-server": "2.0.12",
     "@modelcontextprotocol/client": "$@modelcontextprotocol/client",
-    "@modelcontextprotocol/server": "$@modelcontextprotocol/server"
+    "@modelcontextprotocol/server": "$@modelcontextprotocol/server",
+    "@sarutobi-sasuke/mcp-eval-harness": {
+      "zod": "$zod"
+    }
   }
 }
