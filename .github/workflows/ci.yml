@@ -24,6 +24,7 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run test:e2e
+      - run: npm run check:registry
       - run: npm audit --audit-level=high
 
   # Report floating runtime references (unpinned base images, engines.node

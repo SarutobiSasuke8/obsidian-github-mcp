@@ -186,6 +186,17 @@ Run `npm run test:e2e` for a clean tarball installation and real MCP HTTP client
 
 Policy and token files reject unknown keys. Only `policy_version: 1` and `authority: operator-only` are supported. Correct misspelt fields or remove unsupported metadata before upgrading; silently ignored restrictions are no longer accepted. [Release evidence and remaining gates](docs/RELEASE_EVIDENCE_2026-10-01.md).
 
+The draft MCP Registry npm entry describes a self-hosted Streamable HTTP process,
+not a stdio server. A compatible client starts the process with the declared
+environment and connects to `http://127.0.0.1:{VAULT_MCP_PORT}/mcp` (port 3210 by
+default). Supply the existing policy and token-file paths plus the repository
+owner/name. For GitHub access, use either `GITHUB_TOKEN` or all three documented
+GitHub App variables. The manifest cannot express that alternative group;
+runtime configuration validates it. The process does not create credentials,
+provision a hosted endpoint or bypass its existing bearer-token checks.
+The namespace preserves the exact GitHub owner spelling. `prepublishOnly`
+includes the registry/package gate; no login or publication is performed by it.
+
 ## Security
 
 Read [Security policy](SECURITY.md) before deployment. Report suspected vulnerabilities privately rather than opening a public issue with exploit details.
