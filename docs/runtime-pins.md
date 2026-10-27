@@ -40,3 +40,11 @@ Resolved on 2026-10-16. Nothing in this file has been applied yet: the Dockerfil
 ## Turning the check into a gate
 
 `node scripts/pin-check.mjs` reports and exits 0. `node scripts/pin-check.mjs --strict` (or `PIN_CHECK_STRICT=1`) emits errors and exits 1 when any floating reference remains. Switch the CI step to `--strict` once the pins above are applied.
+
+## Refresh, 27 October 2026
+
+Merged current `main` into the existing proposal without rewriting history. The reporter matches the report-only implementation in agent-handoff-mcp PR #49 at `85ca456a219582b27b7cecd929caa01324cae5c6` (ignoring line endings). It exits 0 with 12 floating references (9 action tags, 2 Docker bases and `engines.node >=22`). The job remains outside the required check aggregate; runtime pins, dependencies and permission logic are unchanged by this proposal.
+
+The pin suggestions above are historical observations from 16 October, not freshly resolved pins. Re-resolve tags and image digests when gate `d48fb4c7` is decided. Marking this report-only proposal ready for review does not approve that gate or apply any pins.
+
+Current main also contains 3 floating action references in `.github/workflows/codeql.yml`: `actions/checkout@v7`, `github/codeql-action/init@v4` and `github/codeql-action/analyze@v4`. These account for the increase from 9 to 12 findings. Resolve their full commit SHAs when applying pins; this refresh does not change them.
