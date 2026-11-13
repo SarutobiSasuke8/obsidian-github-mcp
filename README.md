@@ -100,10 +100,9 @@ byte preservation. CI runs the same checks on Linux and Windows with Node.js 22
 and 24. The 8 tools listed above are the current server surface; tests do not
 publish proposals to a real vault.
 
-Once v0.1.0 is published to npm, a global install will also be available:
+The package is published on npm, so a global install is also available:
 
 ```bash
-# Available once v0.1.0 is published (not yet on the npm registry).
 npm install -g @sarutobi-sasuke/obsidian-github-mcp
 ```
 
