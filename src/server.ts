@@ -100,7 +100,7 @@ async function runTool(
 }
 
 export function createVaultMcpServer(services: Services): McpServer {
-  const server = new McpServer({ name: "obsidian-github-mcp", version: "0.1.0" });
+  const server = new McpServer({ name: "obsidian-github-mcp", version: "0.1.1" });
 
   server.registerTool(
     "vault_whoami",
