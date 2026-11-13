@@ -7,9 +7,10 @@
 - [x] Require the packaged proof in Windows/Linux Node 22/24 CI and the release workflow.
 - [x] Refresh locked dependencies within existing constraints; npm audit reports 0 vulnerabilities.
 - [ ] Complete a disposable real GitHub proposal/review workflow with actual client applications. The local substitute proves request behaviour, not live GitHub permissions or human review.
-- [ ] Configure/verify npm trusted publishing, publish the reviewed version and cold-install the public artifact. Record checksum and hosted release evidence before promoting the listing.
+- [x] Configure/verify npm trusted publishing, publish the reviewed version and cold-install the public artifact. Record checksum and hosted release evidence before promoting the listing. Done for 0.1.0: published 2026-10-24 with provenance, cold-installed 2026-11-13.
+- [ ] Publish 0.1.1 from `main` so a fresh install no longer reports the 3 moderate advisories found in the 0.1.0 cold install (fixes are merged, not released).
 
-See [dated evidence](docs/RELEASE_EVIDENCE_2026-10-01.md). No package publication or maturity promotion is included in this sweep.
+See the dated evidence for [2026-10-01](docs/RELEASE_EVIDENCE_2026-10-01.md) and [2026-11-13](docs/RELEASE_EVIDENCE_2026-11-13.md). The 2026-10-01 sweep included no package publication or maturity promotion.
 
 ## Shipped in the initial release
 
