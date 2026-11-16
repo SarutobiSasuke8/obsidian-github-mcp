@@ -71,7 +71,7 @@ The service has no tools for deleting files, merging branches, pushing to `main`
 Install from source (the current supported path):
 
 ```bash
-git clone https://github.com/YOUR_ACCOUNT/obsidian-github-mcp.git
+git clone https://github.com/SarutobiSasuke8/obsidian-github-mcp.git
 cd obsidian-github-mcp
 npm ci
 cp .env.example .env
